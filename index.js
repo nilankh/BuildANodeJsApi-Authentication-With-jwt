@@ -15,9 +15,11 @@ app.use(bodyParser.json());
 
 // Import ROutes
 const authRoute = require('./routes/auth');
+const postRoute = require('./routes/post');
 
 // Routes middleware
 app.use('/api/user', authRoute);
+app.use('/api/posts', postRoute);
 
 
 // Listen for requests
