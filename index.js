@@ -2,6 +2,10 @@ const express = require('express');
 const app = express();
 const port = 8000;
 
+// db config
+const db = require('./config/mongoose');
+
+
 // Import ROutes
 const authRoute = require('./routes/auth');
 
