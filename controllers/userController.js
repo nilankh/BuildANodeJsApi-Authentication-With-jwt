@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const {registerValidation, loginValidation} = require('../routes/validation');
 
@@ -56,6 +57,7 @@ module.exports.registerUser = async function(req, res){
 
 }
 
+// LOGIN
 module.exports.login = async function(req, res){
     // Lets validate the data before we a user
     const { error } = loginValidation(req.body);
@@ -76,7 +78,11 @@ module.exports.login = async function(req, res){
         return res.status(400).send('Invalid Password');
     }
 
-    res.send('Logged in');
+    // create and assign a token
+    const token = jwt.sign({_id: user._id}, 'sggdgjsh');
+    res.header('auth-token', token).send(token);
+
+    // res.send('Logged in');
 
 
 
