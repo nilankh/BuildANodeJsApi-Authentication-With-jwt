@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-const {registerValidation} = require('../routes/validation');
+const {registerValidation, loginValidation} = require('../routes/validation');
 
 
 
@@ -53,5 +53,31 @@ module.exports.registerUser = async function(req, res){
     } catch (err) {
         res.status(400).send(err);
     }
+
+}
+
+module.exports.login = async function(req, res){
+    // Lets validate the data before we a user
+    const { error } = loginValidation(req.body);
+    if(error){
+        return res.status(400).send(error.details[0].message);
+
+    }
+
+    // Checking if the email is already in the database
+    const user = await User.findOne({email: req.body.email});
+    if(!user){
+        return res.status(400).send('Email is not found');
+    }
+
+    // password is correct
+    const validPass = await bcrypt.compare(req.body.password, user.password);
+    if(!validPass){
+        return res.status(400).send('Invalid Password');
+    }
+
+    res.send('Logged in');
+
+
 
 }
