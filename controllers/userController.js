@@ -26,6 +26,12 @@ module.exports.registerUser = async function(req, res){
         return res.status(400).send(error.details[0].message);
 
     }
+    // Checking if the user is already in the database
+    const emailExist = await User.findOne({email: req.body.email});
+    if(emailExist){
+        return res.status(400).send('Email already exist');
+    }
+
     // Creation of data base
     const user = new User({
         name: req.body.name,
